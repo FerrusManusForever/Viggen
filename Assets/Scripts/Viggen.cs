@@ -2,6 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Altitude {
+    Low,
+    Med,
+    High
+}
+
 public class Viggen : MonoBehaviour
 {
     public float MinSpeed = 0.1f;
@@ -10,10 +16,21 @@ public class Viggen : MonoBehaviour
     public float FireInterval = 0.1f;
     public GameObject BulletRef;
     public float RocketSpeed = 1f;
+
+    public float AltitudeLow = 0f;
+    public float AltitudeMed = 2f;
+    public float AltitudeHigh = 4f;
+    public float ClimbDiveSpeed = 0.4f;
+    public Altitude CurrentAltitude = Altitude.Low;
+
         
 
     private bool isFiring = false;
     private float fireTimer = 0f;
+    private float climbDiveTimer = 0f;
+    private float targetAltitude = 0f;
+
+    
 
 
 
@@ -28,10 +45,12 @@ public class Viggen : MonoBehaviour
     {
         float vert = Input.GetAxis("Vertical");
         float horiz = Input.GetAxis("Horizontal");
+        
         bool isFiring = Input.GetButton("Fire1");
 
         HandleMovement(vert, horiz);
         HandleFiring(isFiring);
+        HandleFlyUpDown();
         
 
 
@@ -47,6 +66,57 @@ public class Viggen : MonoBehaviour
 
         pos += move;
         transform.position = pos;
+    }
+
+    private void HandleFlyUpDown()
+    {
+
+        if (Input.GetButtonDown("FlyUp"))
+        {
+            if (CurrentAltitude == Altitude.Low)
+            {
+                CurrentAltitude = Altitude.Med;               
+            }
+            else if (CurrentAltitude == Altitude.Med)
+            {
+                CurrentAltitude = Altitude.High;
+            }
+                
+        }
+
+        if (Input.GetButtonDown("FlyDown"))
+        {
+            if (CurrentAltitude == Altitude.High)
+            {
+                CurrentAltitude = Altitude.Med;
+            }
+            else if (CurrentAltitude == Altitude.Med)
+            {
+                CurrentAltitude = Altitude.Low;
+            }
+        }
+
+        Vector3 targetPos = transform.position;
+        if (CurrentAltitude == Altitude.Low)
+        {
+            targetPos.y = AltitudeLow;
+        }
+        else if (CurrentAltitude == Altitude.Med)
+        {
+            targetPos.y = AltitudeMed;
+        }
+        else if (CurrentAltitude == Altitude.High)
+        {
+            targetPos.y = AltitudeHigh;
+        }
+        Vector3 pos = transform.position;
+        pos = Vector3.MoveTowards(pos, targetPos, ClimbDiveSpeed * Time.deltaTime);
+
+        transform.position = pos;
+
+
+
+
     }
 
     private void HandleFiring(bool isFiring)

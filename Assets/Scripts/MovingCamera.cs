@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MovingCamera : MonoBehaviour
 {
+    public float RotateSpeed = 1f;
     public Transform FollowTarget;
 
     private Vector3 offset;
@@ -12,6 +13,12 @@ public class MovingCamera : MonoBehaviour
     {
         offset = transform.position - FollowTarget.transform.position;
         
+    }
+
+    private void Update()
+    {
+        float rotateCam = Input.GetAxis("RotateCam");
+        transform.Rotate(transform.up, rotateCam * RotateSpeed * Time.deltaTime, Space.Self);
     }
 
     void LateUpdate()
