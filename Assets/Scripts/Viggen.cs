@@ -51,6 +51,15 @@ public class Viggen : MonoBehaviour
         HandleMovement(vert, horiz);
         HandleFiring(isFiring);
         HandleFlyUpDown();
+
+        if (Input.GetButtonDown("BarrelRollLeft"))
+        {
+            BarrelRoll(-1);
+        }
+        if (Input.GetButtonDown("BarrelRollRight"))
+        {
+            BarrelRoll(1);
+        }
         
 
 
@@ -67,6 +76,8 @@ public class Viggen : MonoBehaviour
         pos += move;
         transform.position = pos;
     }
+
+
 
     private void HandleFlyUpDown()
     {
@@ -114,8 +125,10 @@ public class Viggen : MonoBehaviour
 
         transform.position = pos;
 
+    }
 
-
+    private void BarrelRoll(int direction)
+    {
 
     }
 
